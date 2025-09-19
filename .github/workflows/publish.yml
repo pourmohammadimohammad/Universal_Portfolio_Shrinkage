@@ -2,31 +2,32 @@ name: Publish Python Package
 
 on:
   push:
-    # Trigger when you push tags like v0.1.0, v1.2.3, etc.
     tags:
-      - 'v0.1.0'
+      - 'v*.*.*'
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
-    # If you set up a GitHub Actions environment named 'pypi', include:
     environment: pypi
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.11'
+
+      - name: Clean previous builds
+        run: rm -rf dist
 
       - name: Install build dependencies
-        run: |
-          python -m pip install --upgrade pip build
+        run: python -m pip install --upgrade pip build
 
       - name: Build distributions
-        run: |
-          python -m build
+        run: python -m build
+
+      - name: Check distributions
+        run: twine check dist/*
 
       - name: Publish to PyPI
         run: |
