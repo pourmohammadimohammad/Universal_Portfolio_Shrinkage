@@ -9,6 +9,8 @@ class UPSA:
         self.eff_port = None  # will hold efficient portfolios for each z
         self.best_z = None    # index of best shrinkage parameter
         self.upsa = None      # final UPSA weights
+        self.eigenvalues = None
+        self.eigenvectors = None
 
     def fit(self,
             returns,
@@ -30,6 +32,8 @@ class UPSA:
 
         # Perform eigen decomposition on returns to get eigenvalues and eigenvectors
         eigval, eigvec = UPSA._eigen_decomposition(returns)
+        self.eigenvalues = eigval
+        self.eigenvectors = eigvec
 
         # If no shrinkage grid provided, generate default z_list spanning eigenvalues range
         if self.z_list is None:
@@ -173,15 +177,13 @@ class UPSA:
 
     @staticmethod
     def _eigen_decomposition(features: np.ndarray,
-                             kill_eig: bool = False):
+                             cap: bool = True):
         # Compute covariance in primal or dual space depending on P and T
         T, P = features.shape
         cov = (features @ features.T if P > T else features.T @ features) / T
         eigval, eigvec = np.linalg.eigh(cov)
-        if kill_eig:
-            # Optionally remove near-zero eigenvalues/vectors
-            mask = eigval > 1e-10
-            eigval, eigvec = eigval[mask], eigvec[:, mask]
+        if cap:
+            eigval = np.maximum(eigval, 1e-8)  # cap all eigenvalues from below
         if P > T:
             # Convert dual eigenvectors to primal space
             eigvec = (features.T @ eigvec) * \

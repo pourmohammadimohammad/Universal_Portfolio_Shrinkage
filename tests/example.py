@@ -1,13 +1,14 @@
 import numpy as np
 import pandas as pd
-from upsa.upsa import UPSA
+# from upsa.upsa import UPSA
+from src.upsa.upsa import UPSA
 
 # Load your 153 long–short characteristic portfolios (from jkpfactors.com)
-factors = pd.read_pickle("jkp_monthly_vw_cap.p")
+factors = pd.read_pickle("tests/jkp_monthly_vw_cap.p")
 
 # Split into in-sample and out-of-sample halves
 n_obs = len(factors)
-cut_off = n_obs // 2
+cut_off = n_obs // 5
 factors_ins = factors.iloc[:cut_off]
 factors_oos = factors.iloc[cut_off:]
 
