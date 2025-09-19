@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
  [project]
 name = "universal-upsa"
-version = "0.1.0"
+version = "0.1.1"
 description = "Unbiased Portfolio Shrinkage Approach (UPSA) with LOO or k-fold CV"
 readme = "README.md"
 license = { text = "MIT" }
