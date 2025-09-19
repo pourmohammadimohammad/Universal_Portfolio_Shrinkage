@@ -1,0 +1,11 @@
+# OS/editor
+.DS_Store
+.idea/
+
+# Python build/cache
+__pycache__/
+*.egg-info/
+dist/
+
+# GitHub artifacts
+.github/.DS_Store
